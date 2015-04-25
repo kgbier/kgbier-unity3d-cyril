@@ -25,7 +25,7 @@ public class PlayerCharacterController : MonoBehaviour {
 		pc.State = state;
 		animator.SetBool("Moving", state == CharacterState.Moving);
 		animator.SetBool("Blocking", state == CharacterState.Blocking);
-		//animator.SetBool("Idle", state == CharacterState.Idle);
+		animator.SetBool("Idling", state == CharacterState.Idle);
 		if(state == CharacterState.Dashing)
 			animator.SetTrigger("Dashing");
 	}
@@ -71,6 +71,7 @@ public class PlayerCharacterController : MonoBehaviour {
 				rigidbody.velocity = dashDirection * pc.getDashSpeed();
 			} else if(rigidbody.velocity.magnitude < 0.3f) {
 				setState(CharacterState.Idle);
+				//rigidbody.velocity = Vector2.zero;
 				timeDashed = 0;
 			}
 		} else if(Input.GetAxis("Block") > 0) {

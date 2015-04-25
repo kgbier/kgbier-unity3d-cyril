@@ -16,6 +16,7 @@ public class PlayerCharacter : MonoBehaviour {
 
 	private List<Ability>		abilities = new List<Ability>();
 	private DashAbility			dashAbility;
+	private AttackAbility		attackAbility;
 
 	public float MoveSpeed {
 		get { return moveSpeed; }
@@ -77,8 +78,10 @@ public class PlayerCharacter : MonoBehaviour {
 
 	// Use this for initialization
 	void Start() {
-		dashAbility = new DashAbility("Dash", 1, 40);
+		dashAbility = new DashAbility("Dash", 1.0f, 40.0f);
+		attackAbility = new AttackAbility("Attack", 1.0f, 10.0f);
 		abilities.Add(dashAbility);
+		abilities.Add(attackAbility);
 	}
 
 	// Update is called once per frame
