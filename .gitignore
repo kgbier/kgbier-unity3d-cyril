@@ -12,6 +12,8 @@
 /*.userprefs
 /*.pidb
 /*.booproj
+*.tmp
+*.svd
 
 #Unity3D Generated File On Crash Reports
 sysinfo.txt

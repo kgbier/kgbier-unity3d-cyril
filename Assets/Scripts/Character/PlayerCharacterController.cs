@@ -1,20 +1,22 @@
 using UnityEngine;
 using System.Collections;
 
-public class CharacterController : MonoBehaviour {
+public class PlayerCharacterController : MonoBehaviour {
 
-	public PlayerCharacter pc;
-	public Camera camera;
-	public Rigidbody2D rigidbody;
-	public Animator animator;
+	private PlayerCharacter	pc;
+	private Camera					camera;
+	private Rigidbody2D			rigidbody;
+	private Animator				animator;
 
-	private Vector2 actorFacing;
-	private Vector2 dashDirection;
-	private float timeDashed = 0;
-	private const float dashDistance = 0.16f;
+	private Vector2		actorFacing;
+	private Vector2		dashDirection;
+	private float			timeDashed = 0.0f;
 
 	void Start() {
-
+		pc = GetComponent<PlayerCharacter>();
+		camera = GetComponentInChildren<Camera>();
+		rigidbody = GetComponent<Rigidbody2D>();
+		animator = GetComponent<Animator>();
 	}
 
 	//Updates the player internal state and sets the correct animation
@@ -65,8 +67,8 @@ public class CharacterController : MonoBehaviour {
 			//otherwise communicate to the player we're now idle
 			// and reset the dash timer;
 			timeDashed += Time.deltaTime;
-			if(timeDashed < dashDistance) {
-				rigidbody.velocity = dashDirection * pc.dashSpeed();
+			if(timeDashed < pc.getDashDistance()) {
+				rigidbody.velocity = dashDirection * pc.getDashSpeed();
 			} else if(rigidbody.velocity.magnitude < 0.3f) {
 				setState(CharacterState.Idle);
 				timeDashed = 0;

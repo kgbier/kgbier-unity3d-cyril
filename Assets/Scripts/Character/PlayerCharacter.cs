@@ -7,15 +7,15 @@ public enum CharacterState {
 
 public class PlayerCharacter : MonoBehaviour {
 
-	private const float moveSpeed = 5;
-
-	private float stamina = 100;
-	private float maxStamina = 100;
-	private float staminaRegenRate = 15;
+	private float		moveSpeed = 5.0f;
+	private float		stamina = 100.0f;
+	private float		maxStamina = 100.0f;
+	private float		staminaRegenRate = 15.0f;
 
 	private CharacterState currentState = CharacterState.Idle;
 
-	private List<Ability> abilities = new List<Ability>();
+	private List<Ability>		abilities = new List<Ability>();
+	private DashAbility			dashAbility;
 
 	public float MoveSpeed {
 		get { return moveSpeed; }
@@ -24,11 +24,31 @@ public class PlayerCharacter : MonoBehaviour {
 	public float Stamina {
 		get { return stamina; }
 	}
+
 	public CharacterState State {
 		get { return currentState; }
 		set { currentState = value; }
 	}
 
+	//Asks if the player character can use dash
+	// (is not already dashing? if not ask the ability)
+	public bool canDash() {
+		if(currentState != CharacterState.Dashing) {
+			return dashAbility.canUse(stamina);
+		}
+		return false;
+	}
+	public float getDashSpeed() {
+		return dashAbility.Speed;
+	}
+	public float getDashDistance() {
+		return dashAbility.Distance;
+	}
+	public void dash() {
+		useAbility(dashAbility);
+	}
+
+	//Regenerates stamina, uses deltaTime, only call in Update();
 	private void regenerateStamina() {
 		if(stamina < maxStamina) {
 			stamina += staminaRegenRate * Time.deltaTime;
@@ -37,28 +57,19 @@ public class PlayerCharacter : MonoBehaviour {
 		}
 	}
 
-	public bool canDash() {
-		if(currentState != CharacterState.Dashing) {
-			return abilities[0].canUse(this);
-		}
-		return false;
-	}
-
-	public float dashSpeed() {
-		return abilities[0].DashSpeed;
-	}
-
-	public void dash() {
-		useAbility(abilities[0]);
-	}
-
+	//Runs the cooldown for each of the player's abilities
 	private void cooldownAbilities() {
 		//Debug.Log(dashCooldown);
 		foreach(Ability a in abilities) {
-			a.runCooldown();
+			if(a.cooldown > 0) {
+				a.cooldown -= Time.deltaTime;
+			} else {
+				a.cooldown = 0;
+			}
 		}
 	}
 
+	//Calculate stamina cost of an ability and use it.
 	public void useAbility(Ability a) {
 		stamina -= a.staminaCost;
 		a.use();
@@ -66,7 +77,8 @@ public class PlayerCharacter : MonoBehaviour {
 
 	// Use this for initialization
 	void Start() {
-		abilities.Add(new Ability("Dash", 1));
+		dashAbility = new DashAbility("Dash", 1, 40);
+		abilities.Add(dashAbility);
 	}
 
 	// Update is called once per frame
@@ -74,4 +86,5 @@ public class PlayerCharacter : MonoBehaviour {
 		regenerateStamina();
 		cooldownAbilities();
 	}
+
 }

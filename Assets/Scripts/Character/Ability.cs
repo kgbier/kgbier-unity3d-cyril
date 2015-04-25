@@ -1,52 +1,38 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿using System.Collections;
 
 public class Ability {
 
-	public string name;
-	public float cooldownDuration;
+	public string		name;
+	public float		cooldownDuration;
+	public float		staminaCost;
 
-	public float staminaCost = 40;
-	public const float dashSpeed = 20;
+	public float		cooldown = 0.0f;
 
-	public float cooldown = 0;
-
-	public float DashSpeed {
-		get { return dashSpeed; }
+	public string Name {
+		get { return name; }
 	}
 
-	public Ability(string name, float cooldownDuration) {
+	public float Cooldown {
+		get { return cooldown; }
+		set { cooldown = value; }
+	}
+
+	public Ability(string name, float cooldownDuration, float staminaCost) {
 		this.name = name;
 		this.cooldownDuration = cooldownDuration;
+		this.staminaCost = staminaCost;
 	}
 
-	public bool canUse(PlayerCharacter pc) {
+	public bool canUse(float stamina) {
 		if(cooldown == 0
-			&& pc.Stamina > staminaCost) {
+			&& stamina > staminaCost) {
 			return true;
 		}
 		return false;
-	}
-
-	public void runCooldown() {
-		if(cooldown > 0) {
-			cooldown -= Time.deltaTime;
-		} else {
-			cooldown = 0;
-		}
 	}
 
 	public void use() {
 		cooldown = cooldownDuration;
 	}
 
-	// Use this for initialization
-	void Start() {
-
-	}
-
-	// Update is called once per frame
-	void Update() {
-
-	}
 }
