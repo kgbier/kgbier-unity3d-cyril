@@ -12,7 +12,7 @@ public class StaminaBar : MonoBehaviour {
 	}
 
 	// Update is called once per frame
-	void Update() {
+	void LateUpdate() {
 		slider.value = pc.Stamina;
 	}
 }

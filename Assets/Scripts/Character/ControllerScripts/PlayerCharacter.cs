@@ -77,7 +77,7 @@ public class PlayerCharacter : MonoBehaviour {
 	}
 
 	// Use this for initialization
-	void Start() {
+	void Awake() {
 		dashAbility = new DashAbility("Dash", 1.0f, 40.0f);
 		attackAbility = new AttackAbility("Attack", 1.0f, 10.0f);
 		abilities.Add(dashAbility);
