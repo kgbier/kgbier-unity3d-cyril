@@ -24,6 +24,8 @@ public class PlayerCharacterController : MonoBehaviour {
 		animator.SetBool("Moving", state == CharacterState.Moving);
 		animator.SetBool("Blocking", state == CharacterState.Blocking);
 		animator.SetBool("Idling", state == CharacterState.Idle);
+		if(state == CharacterState.Attacking)
+			animator.SetTrigger("Attacking");
 		if(state == CharacterState.Dashing)
 			animator.SetTrigger("Dashing");
 	}
@@ -82,6 +84,10 @@ public class PlayerCharacterController : MonoBehaviour {
 		setState(CharacterState.Moving);
 		recordActorFacing(mousePos);
 		rigidbody.velocity = actorFacing * pc.MoveSpeed;
+	}
+
+	public void attack() {
+		setState(CharacterState.Attacking);
 	}
 
 	void Update() {

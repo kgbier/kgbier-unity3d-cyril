@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 
 public enum CharacterState {
-	Idle, Moving, Blocking, Dashing
+	Idle, Moving, Blocking, Dashing, Attacking
 };
 
 public class PlayerCharacter : MonoBehaviour {
