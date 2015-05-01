@@ -17,20 +17,18 @@ public class InputController : MonoBehaviour {
 		switch(pc.State) {
 			case CharacterState.Idle:
 			case CharacterState.Moving:
-			case CharacterState.Blocking:
 			case CharacterState.Attacking:
-				if(Input.GetAxis("Dash") > 0) {
+			case CharacterState.Blocking:
+				if(Input.GetButtonDown("Attack")) {
+					controller.attack();
+				} else if(Input.GetButtonDown("Dash")) {
 					controller.dash(Camera.main.ScreenToWorldPoint(Input.mousePosition));
-				} else if(Input.GetAxis("Block") > 0) {
+				} else if(Input.GetButton("Block")) {
 					controller.block();
-				} else if(Input.GetAxis("Move") > 0) {
+				} else if(Input.GetButton("Move")) {
 					controller.move(Camera.main.ScreenToWorldPoint(Input.mousePosition));
 				} else {
 					controller.idle(Camera.main.ScreenToWorldPoint(Input.mousePosition));
-				}
-
-				if(Input.GetAxis("Attack") > 0) {
-					controller.attack();
 				}
 
 				break;

@@ -39,6 +39,15 @@ public class PlayerCharacter : MonoBehaviour {
 		}
 		return false;
 	}
+
+	public bool canAttack() {
+		if(currentState == CharacterState.Idle
+			|| currentState == CharacterState.Blocking) {
+			return attackAbility.canUse(stamina);
+		}
+		return false;
+	}
+
 	public float getDashSpeed() {
 		return dashAbility.Speed;
 	}
@@ -47,6 +56,9 @@ public class PlayerCharacter : MonoBehaviour {
 	}
 	public void dash() {
 		useAbility(dashAbility);
+	}
+	public void attack() {
+		useAbility(attackAbility);
 	}
 
 	//Regenerates stamina, uses deltaTime, only call in Update();
@@ -78,8 +90,8 @@ public class PlayerCharacter : MonoBehaviour {
 
 	// Use this for initialization
 	void Awake() {
-		dashAbility = new DashAbility("Dash", 1.0f, 40.0f);
-		attackAbility = new AttackAbility("Attack", 1.0f, 10.0f);
+		dashAbility = new DashAbility("Dash", 1.0f, 38.0f);
+		attackAbility = new AttackAbility("Attack", 0.0f, 12.0f);
 		abilities.Add(dashAbility);
 		abilities.Add(attackAbility);
 	}

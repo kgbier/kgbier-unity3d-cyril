@@ -87,7 +87,11 @@ public class PlayerCharacterController : MonoBehaviour {
 	}
 
 	public void attack() {
-		setState(CharacterState.Attacking);
+		if(pc.canAttack()) {
+			setState(CharacterState.Attacking);
+			pc.attack();
+			//recordActorFacing(mousePos);
+		}
 	}
 
 	void Update() {
