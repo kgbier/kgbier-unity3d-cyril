@@ -10,7 +10,11 @@ public class PlayerCharacter : MonoBehaviour {
 	private float		moveSpeed = 5.0f;
 	private float		stamina = 100.0f;
 	private float		maxStamina = 100.0f;
-	private float		staminaRegenRate = 15.0f;
+	private float		baseStaminaRegenRate = 15.0f;
+
+	//because Malus is a better word than penalty :p
+	private const float movementStaminaMalus = 8.0f;
+	private const float blockingStaminaMalus = 12.0f;
 
 	private CharacterState currentState = CharacterState.Idle;
 
@@ -31,8 +35,7 @@ public class PlayerCharacter : MonoBehaviour {
 		set { currentState = value; }
 	}
 
-	//Asks if the player character can use dash
-	// (is not already dashing? if not ask the ability)
+	//Asks if the player character can use dash (is not already dashing)
 	public bool canDash() {
 		if(currentState != CharacterState.Dashing) {
 			return dashAbility.canUse(stamina);
@@ -40,6 +43,7 @@ public class PlayerCharacter : MonoBehaviour {
 		return false;
 	}
 
+	//Asks if the player can attack (idle or blocking)
 	public bool canAttack() {
 		if(currentState == CharacterState.Idle
 			|| currentState == CharacterState.Blocking) {
@@ -61,18 +65,28 @@ public class PlayerCharacter : MonoBehaviour {
 		useAbility(attackAbility);
 	}
 
-	//Regenerates stamina, uses deltaTime, only call in Update();
+	//Regenerates stamina and applies stamina regen Malus' uses deltaTime,
+	// only call in Update().
 	private void regenerateStamina() {
+		float regenRate = baseStaminaRegenRate;
+		switch(currentState) {
+			case CharacterState.Moving:
+				regenRate -= movementStaminaMalus;
+				break;
+			case CharacterState.Blocking:
+				regenRate -= blockingStaminaMalus;
+				break;
+		}
 		if(stamina < maxStamina) {
-			stamina += staminaRegenRate * Time.deltaTime;
+			stamina += regenRate * Time.deltaTime;
 		} else {
 			stamina = maxStamina;
 		}
 	}
 
-	//Runs the cooldown for each of the player's abilities
+	//Runs the cooldown for each of the player's abilities uses deltaTime, 
+	// only call in Update().
 	private void cooldownAbilities() {
-		//Debug.Log(dashCooldown);
 		foreach(Ability a in abilities) {
 			if(a.cooldown > 0) {
 				a.cooldown -= Time.deltaTime;
@@ -82,21 +96,21 @@ public class PlayerCharacter : MonoBehaviour {
 		}
 	}
 
-	//Calculate stamina cost of an ability and use it.
+	//Apply stamina cost of an ability and use it.
 	public void useAbility(Ability a) {
 		stamina -= a.staminaCost;
 		a.use();
 	}
 
-	// Use this for initialization
+	//Initialization. Creates test abilities dash and attack.
 	void Awake() {
-		dashAbility = new DashAbility("Dash", 1.0f, 38.0f);
+		dashAbility = new DashAbility("Dash", 0.5f, 38.0f);
 		attackAbility = new AttackAbility("Attack", 0.0f, 12.0f);
 		abilities.Add(dashAbility);
 		abilities.Add(attackAbility);
 	}
 
-	// Update is called once per frame
+	//Regenerate player stamina and run cooldown for all player abilities.
 	void Update() {
 		regenerateStamina();
 		cooldownAbilities();

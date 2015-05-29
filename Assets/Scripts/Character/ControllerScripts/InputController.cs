@@ -15,6 +15,9 @@ public class InputController : MonoBehaviour {
 	// Update is called once per frame
 	void Update() {
 		switch(pc.State) {
+			case CharacterState.Dashing:
+				controller.continueDash();
+				break;
 			case CharacterState.Idle:
 			case CharacterState.Moving:
 			case CharacterState.Attacking:
@@ -30,12 +33,7 @@ public class InputController : MonoBehaviour {
 				} else {
 					controller.idle(Camera.main.ScreenToWorldPoint(Input.mousePosition));
 				}
-
-				break;
-			case CharacterState.Dashing:
-				controller.continueDash();
 				break;
 		}
-
 	}
 }
