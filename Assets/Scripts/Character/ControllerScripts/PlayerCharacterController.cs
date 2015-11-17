@@ -1,5 +1,4 @@
 using UnityEngine;
-using System.Collections;
 
 public class PlayerCharacterController : MonoBehaviour {
 
@@ -84,7 +83,11 @@ public class PlayerCharacterController : MonoBehaviour {
 	public void move(Vector2 mousePos) {
 		setState(CharacterState.Moving);
 		recordActorFacing(mousePos);
-		rigidbody.velocity = actorFacing * pc.MoveSpeed;
+		float magnitude = Input.GetAxis("Move");
+		if(magnitude < 0) {
+			magnitude *= 0.6f;
+		}
+		rigidbody.velocity = actorFacing * pc.MoveSpeed * magnitude;
 	}
 
 	//if the player can attack, perform the action in the current direction
